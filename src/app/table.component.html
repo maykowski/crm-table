@@ -1,0 +1,28 @@
+<h2>Test2</h2>
+
+<div *ngFor="let col of keys">
+  {{col.name}}
+  <input type="checkbox" [(ngModel)]="col.enabled">
+</div>
+
+<button (click)="removeColumn()">switch</button>
+
+<table>
+  <th *ngFor="let col of keys">
+    <div *ngIf="col.enabled">
+      {{col.name}}
+    </div>
+  </th>
+  <tr *ngFor="let row of rows">
+    <td *ngFor="let col of keys">
+      <div *ngIf="col.enabled">
+        {{row[col.name]}}
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div *ngFor="let key of keys">
+  {{key.name}}
+</div>
+
