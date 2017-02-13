@@ -1,10 +1,12 @@
 import {Component, Pipe, PipeTransform} from '@angular/core';
 import {Column} from "./Column";
+import {PopoverModule} from "ngx-popover";
 
 @Component({
   moduleId: module.id,
   selector: 'table-component',
-  templateUrl: 'table.component.html',
+  templateUrl: 'table.component.html'
+
 })
 export class TableComponent {
   rows: Array < any > = [
@@ -56,44 +58,58 @@ export class TableComponent {
     },
     {"name": "Carissa Kunze", "email": "Merl_Frami@yahoo.com", "jobTitle": "Regional Division Technician", "active": true, "phoneNumber": "949-983-0342", "date": "2015-11-05T08:09:09.463Z"}
   ]
-  keys: Column[];
+  columns: Column[];
+  listOne: Array<string> = ['Coffee', 'Orange Juice', 'Red Wine', 'Unhealty drink!', 'Water'];
 
   constructor() {
-    this.keys = this.columns();
-    // console.log(this.keys);
+    this.columns = this.extractColumns();
+    // console.log(this.columns);
   }
 
-  columns(): Column[]{
+  extractColumns(): Column[]{
     let columnsKeys = Object.keys(this.rows[0]);
     let columns: Column[] = [];
     for (let col of columnsKeys) {
-      columns.push({name: col, enabled: true});
+      columns.push({name: col, active: true});
     }
     return columns;
   }
 
-  removeColumn(): void {
-    // this.keys.splice(0, 1);
-    let tempKeys = this.keys;
-    this.keys = [];
+  onChangeOrder(item:Column, event:Event): void {
+    let itemToRemove = this.columns.indexOf(item);
+    this.columns.splice(itemToRemove, 1);
+    if (item.active) {
+      let activeList = this.columns.filter(item => item.active);
+      this.columns.splice(activeList.length, 0, item);
+    }else{
+      this.columns.push(item);
+      // let inactives = this.columns.filter(column => !column.active);
+      this.columns.sort((a: any, b: any) => {
+        if (!a.active && !b.active) {
+          if (a.name < b.name) {
+            return -1;
+          } else if (a.name > b.name) {
+            return 1;
+          } else {
+            return 0;
+          }
+        }
+      })
+      ;
+      // console.log("filter", inactives);
+    }
 
-    console.log(this.keys.length + ", " + tempKeys.length)
-    this.keys.push(tempKeys[2])
-    this.keys.push(tempKeys[1])
-    this.keys.push(tempKeys[3])
   }
 
 
 }
 
-// @Pipe({name: 'keys'})
-// export class KeysPipe implements PipeTransform {
-//   transform(value:any, args:string[]) : any {
-//     let keys:any = [];
-//     for (let key in value) {
-//       keys.push({key: key, value: value[key]});
-//     }
-//     return keys;
+// @Pipe({ name: 'sortInactive' })
+// export class SortInactivePipe implements PipeTransform {
+//   transform(allColumns: Column[]) {
+//      let inactiveCols = allColumns.filter(column => !column.active);
+//      console.log("inactivecols", inactiveCols);
+//      return allColumns;
 //   }
 // }
 

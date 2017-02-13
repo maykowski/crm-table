@@ -1,4 +1,4 @@
 export class Column{
   name:string;
-  enabled:boolean;
+  active:boolean;
 }

@@ -1,28 +1,63 @@
 <h2>Test2</h2>
 
-<div *ngFor="let col of keys">
-  {{col.name}}
-  <input type="checkbox" [(ngModel)]="col.enabled">
+<div>
+  <popover-content #myPopover placement="bottom" [closeOnClickOutside]="true">
+    <!--<div *ngFor="let col of columns">-->
+      <!--{{col.name}}-->
+      <!--<input type="checkbox" [(ngModel)]="col.active">-->
+    <!--</div>-->
+
+
+
+          <div class="panel-heading">
+            Columns
+          </div>
+
+            <ul class="list-group" dnd-sortable-container [sortableData]="columns">
+              <li *ngFor="let item of columns; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i" (change)="onChangeOrder(item, $event)">
+                <div class="row">
+                  <div class="col-xs-9">{{item.name}}</div>
+                  <div class="col-xs-1"><input type="checkbox" [(ngModel)]="item.active"></div>
+
+
+                </div>
+              </li>
+            </ul>
+
+
+      <!--<div class="col-sm-6">-->
+        <!--<div class="panel panel-default">-->
+          <!--<div class="panel-body">-->
+            <!--My prefences:<br/>-->
+            <!--<span *ngFor="let item of columns; let i = index">{{i + 1}}) {{item.name}}<br/></span>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+
+  </popover-content>
+
+  <button [popover]="myPopover">click this button to see a popover</button>
 </div>
 
-<button (click)="removeColumn()">switch</button>
+
+
 
 <table>
-  <th *ngFor="let col of keys">
-    <div *ngIf="col.enabled">
+  <th *ngFor="let col of columns">
+    <div *ngIf="col.active">
       {{col.name}}
     </div>
   </th>
   <tr *ngFor="let row of rows">
-    <td *ngFor="let col of keys">
-      <div *ngIf="col.enabled">
+    <td *ngFor="let col of columns">
+      <div *ngIf="col.active">
         {{row[col.name]}}
       </div>
     </td>
   </tr>
 </table>
 
-<div *ngFor="let key of keys">
+<div *ngFor="let key of columns">
   {{key.name}}
 </div>
 
