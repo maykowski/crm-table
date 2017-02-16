@@ -2,44 +2,33 @@
 
 <div>
   <popover-content #myPopover placement="bottom" [closeOnClickOutside]="true">
-    <!--<div *ngFor="let col of columns">-->
-      <!--{{col.name}}-->
-      <!--<input type="checkbox" [(ngModel)]="col.active">-->
-    <!--</div>-->
+      <div class="panel-heading">
+      Columns
+    </div>
 
-
-
-          <div class="panel-heading">
-            Columns
+    <ul dnd-sortable-container [sortableData]="columns" class="column-list">
+      <li *ngFor="let item of columns; let i = index" class="column-item" dnd-sortable [sortableIndex]="i" (change)="onChangeOrder(item, $event)">
+        <div class="row">
+          <div class="col-sm-3">
+            <input type='checkbox' id="id_{{item.name}}" [(ngModel)]="item.active"/>
+            <label for="id_{{item.name}}"></label>
           </div>
 
-            <ul class="list-group" dnd-sortable-container [sortableData]="columns">
-              <li *ngFor="let item of columns; let i = index" class="list-group-item" dnd-sortable [sortableIndex]="i" (change)="onChangeOrder(item, $event)">
-                <div class="row">
-                  <div class="col-xs-9">{{item.name}}</div>
-                  <div class="col-xs-1"><input type="checkbox" [(ngModel)]="item.active"></div>
 
 
-                </div>
-              </li>
-            </ul>
+          <div class="col-sm-7">{{item.name}}</div>
+          <div class="col-sm-2">
+            <div class="glyphicon glyphicon-menu-hamburger"></div>
+          </div>
 
+        </div>
 
-      <!--<div class="col-sm-6">-->
-        <!--<div class="panel panel-default">-->
-          <!--<div class="panel-body">-->
-            <!--My prefences:<br/>-->
-            <!--<span *ngFor="let item of columns; let i = index">{{i + 1}}) {{item.name}}<br/></span>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-
+      </li>
+    </ul>
   </popover-content>
 
   <button [popover]="myPopover">click this button to see a popover</button>
 </div>
-
-
 
 
 <table>

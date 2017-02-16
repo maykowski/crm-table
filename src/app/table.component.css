@@ -1,0 +1,9 @@
+/*.list-group-item, .list-group{*/
+  /*transition:all 2s;*/
+/*}*/
+
+
+.list-group li {
+  transition: all 1s;
+  transform: translateY(0%);
+}

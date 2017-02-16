@@ -1,12 +1,34 @@
-import {Component, Pipe, PipeTransform} from '@angular/core';
+import {Component, Pipe, PipeTransform, animate, transition, style, state, trigger, ElementRef, ChangeDetectorRef, Renderer} from '@angular/core';
 import {Column} from "./Column";
-import {PopoverModule} from "ngx-popover";
+import {PopoverModule, PopoverContent} from "ngx-popover";
 
 @Component({
   moduleId: module.id,
   selector: 'table-component',
-  templateUrl: 'table.component.html'
-
+  templateUrl: 'table.component.html',
+  styles: [`
+div.popover-content {
+  padding: 0px 0px !important;
+}
+.column-list{list-style-type: none;     padding: 0px 0px;}
+.column-item{cursor:move; padding: 8px 20px;}
+.column-item:hover{background-color: #eee;}
+.glyphicon-menu-hamburger{opacity: 0; color:#8e8e8e;}
+.column-item:hover .glyphicon-menu-hamburger{opacity: 1;}
+input[type=checkbox] {display:none; }
+ 
+input[type=checkbox] + label{
+height: 16px;
+width: 16px;
+display:inline-block;
+padding: 0 0 0 0px;
+margin-bottom: 0px;
+background: url(svgicons.svg) no-repeat -79px -474px;
+}
+input[type=checkbox]:checked + label{
+background: url(svgicons.svg) no-repeat -102px -474px;
+}
+`]
 })
 export class TableComponent {
   rows: Array < any > = [
@@ -63,10 +85,9 @@ export class TableComponent {
 
   constructor() {
     this.columns = this.extractColumns();
-    // console.log(this.columns);
   }
 
-  extractColumns(): Column[]{
+  extractColumns(): Column[] {
     let columnsKeys = Object.keys(this.rows[0]);
     let columns: Column[] = [];
     for (let col of columnsKeys) {
@@ -75,29 +96,8 @@ export class TableComponent {
     return columns;
   }
 
-  onChangeOrder(item:Column, event:Event): void {
-    let itemToRemove = this.columns.indexOf(item);
-    this.columns.splice(itemToRemove, 1);
-    if (item.active) {
-      let activeList = this.columns.filter(item => item.active);
-      this.columns.splice(activeList.length, 0, item);
-    }else{
-      this.columns.push(item);
-      // let inactives = this.columns.filter(column => !column.active);
-      this.columns.sort((a: any, b: any) => {
-        if (!a.active && !b.active) {
-          if (a.name < b.name) {
-            return -1;
-          } else if (a.name > b.name) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      })
-      ;
-      // console.log("filter", inactives);
-    }
+  onChangeOrder(item: Column, event: Event): void {
+
 
   }
 
