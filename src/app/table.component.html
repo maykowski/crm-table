@@ -1,22 +1,21 @@
 <h2>Test2</h2>
 
-<div>
+<div class="table-panel">
   <popover-content #myPopover placement="bottom" [closeOnClickOutside]="true">
-      <div class="panel-heading">
+    <div class="panel-heading">
       Columns
     </div>
 
     <ul dnd-sortable-container [sortableData]="columns" class="column-list">
-      <li *ngFor="let item of columns; let i = index" class="column-item" dnd-sortable [sortableIndex]="i" (change)="onChangeOrder(item, $event)">
+      <li *ngFor="let item of columns; let i = index" class="column-item" dnd-sortable [sortableIndex]="i" (dragstart)="toggleHighlightCol(i, true)" (dragend)="toggleHighlightCol(i, false)" >
         <div class="row">
           <div class="col-sm-3">
-            <input type='checkbox' id="id_{{item.name}}" [(ngModel)]="item.active"/>
+            <input type='checkbox' id="id_{{item.name}}" [(ngModel)]="item.active" [disabled]="!item.activable"/>
             <label for="id_{{item.name}}"></label>
           </div>
 
+          <div class="col-sm-7 column-name"><span>{{item.name}}</span><span class="inactivable" *ngIf="!item.activable">*</span></div>
 
-
-          <div class="col-sm-7">{{item.name}}</div>
           <div class="col-sm-2">
             <div class="glyphicon glyphicon-menu-hamburger"></div>
           </div>
@@ -27,19 +26,19 @@
     </ul>
   </popover-content>
 
-  <button [popover]="myPopover">click this button to see a popover</button>
+  <button [popover]="myPopover" class="column-btn">Columns</button>
 </div>
 
 
-<table>
+<table class="table table-striped">
   <th *ngFor="let col of columns">
     <div *ngIf="col.active">
       {{col.name}}
     </div>
   </th>
   <tr *ngFor="let row of rows">
-    <td *ngFor="let col of columns">
-      <div *ngIf="col.active">
+    <td *ngFor="let col of columns"  [class.highlight]="col.hightlight">
+      <div *ngIf="col.active" >
         {{row[col.name]}}
       </div>
     </td>

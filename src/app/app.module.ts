@@ -9,7 +9,7 @@ import {DndModule} from "ng2-dnd";
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, PopoverModule, DndModule.forRoot()],
-  declarations: [ AppComponent, TableComponent ],
+  declarations: [ AppComponent, TableComponent],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

@@ -7,14 +7,30 @@ import {PopoverModule, PopoverContent} from "ngx-popover";
   selector: 'table-component',
   templateUrl: 'table.component.html',
   styles: [`
-div.popover-content {
-  padding: 0px 0px !important;
+
+.column-btn{margin-left:100px;}
+
+.highlight{background-color: #dedede;}
+
+.table-panel{
+margin: 20px 20px;
+width:80%;
+}
+
+
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0;
 }
 .column-list{list-style-type: none;     padding: 0px 0px;}
 .column-item{cursor:move; padding: 8px 20px;}
 .column-item:hover{background-color: #eee;}
 .glyphicon-menu-hamburger{opacity: 0; color:#8e8e8e;}
 .column-item:hover .glyphicon-menu-hamburger{opacity: 1;}
+.column-name{margin-left:0;}
+.inactivable{color:red; }
+
 input[type=checkbox] {display:none; }
  
 input[type=checkbox] + label{
@@ -28,6 +44,8 @@ background: url(svgicons.svg) no-repeat -79px -474px;
 input[type=checkbox]:checked + label{
 background: url(svgicons.svg) no-repeat -102px -474px;
 }
+
+
 `]
 })
 export class TableComponent {
@@ -81,7 +99,7 @@ export class TableComponent {
     {"name": "Carissa Kunze", "email": "Merl_Frami@yahoo.com", "jobTitle": "Regional Division Technician", "active": true, "phoneNumber": "949-983-0342", "date": "2015-11-05T08:09:09.463Z"}
   ]
   columns: Column[];
-  listOne: Array<string> = ['Coffee', 'Orange Juice', 'Red Wine', 'Unhealty drink!', 'Water'];
+  activableColumns: string[] = ['name'];
 
   constructor() {
     this.columns = this.extractColumns();
@@ -91,26 +109,43 @@ export class TableComponent {
     let columnsKeys = Object.keys(this.rows[0]);
     let columns: Column[] = [];
     for (let col of columnsKeys) {
-      columns.push({name: col, active: true});
+      let activable = true;
+      for (let activableColumns of this.activableColumns) {
+        if (activableColumns === col) {
+          activable = false;
+        }
+        columns.push({name: col, active: true, activable: activable});
+      }
     }
+    console.log(columns);
     return columns;
   }
 
-  onChangeOrder(item: Column, event: Event): void {
-
-
+  toggleHighlightCol(i:number, hightlight:boolean):void{
+    // console.log("toggleHighlightCol")
+    if(this.columns[i])
+      this.columns[i]['hightlight']=hightlight;
   }
+
+  // cleanHighlightCol(i:number):void{
+  //   console.log("cleanHighlightCol")
+  //   if(this.columns[i])
+  //     this.columns[i]['hightlight']=false;
+  // }
+
+  // toggleColumn(): void {
+  //
+  //   let tempCol:Column[] = [];
+  //   for (let col of this.columns) {
+  //     tempCol.push(col);
+  //   }
+  //   this.columns = tempCol;
+  //   console.log("toggleColumn")
+  //
+  // }
 
 
 }
 
-// @Pipe({ name: 'sortInactive' })
-// export class SortInactivePipe implements PipeTransform {
-//   transform(allColumns: Column[]) {
-//      let inactiveCols = allColumns.filter(column => !column.active);
-//      console.log("inactivecols", inactiveCols);
-//      return allColumns;
-//   }
-// }
 
 
