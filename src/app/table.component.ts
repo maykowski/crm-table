@@ -9,6 +9,7 @@ import {DataTableParams} from "./types";
   styleUrls: ['table.component.css']
 })
 export class TableComponent implements OnInit {
+
   private _items: any[] = [];
 
   private _columns: Column[] = [];
@@ -24,7 +25,7 @@ export class TableComponent implements OnInit {
     //this._onReloadFinished();
   }
 
-  @Input() get columns() {
+  get columns() {
     return this._columns;
   }
 
@@ -85,6 +86,9 @@ export class TableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._columns = this.extractColumns(this.items, this.activableColumns);
+    this.prepareProperty();
+
     this._initDefaultClickEvents();
     this._displayParams = {
       sortBy: this.sortBy,
@@ -163,6 +167,29 @@ export class TableComponent implements OnInit {
       return false;
     }
   }
+
+  // extracting columns from array and mark activable columns
+  extractColumns(items:any[], activableColumns:string[]): Column[] {
+    let columnsKeys = Object.keys(items[0]);
+    let columns: Column[] = [];
+    for (let col of columnsKeys) {
+      let activable = true;
+      for (let activableColumn of activableColumns) {
+        if (activableColumn.toUpperCase() === col.toUpperCase()) {
+          activable = false;
+        }
+        columns.push({name: col, active: true, activable: activable, sortable: undefined, property: undefined});
+      }
+    }
+    return columns;
+  }
+
+  prepareProperty() {
+    for (let col of this.columns) {
+      col.property = col.name.replace(" ", "")
+    }
+  }
+
 }
 
 

@@ -6,7 +6,7 @@ import {Column} from "./Column";
 @Component({
   moduleId: module.id,
   selector: 'my-app',
-  template: `<table-component (reload)="reloadItems($event)"         [items]="rows" [columns]="columns"
+  template: `<table-component (reload)="reloadItems($event)"         [items]="rows"
 [activableColumns]="activableColumns"         [itemCount]="itemCount" [sortableColumns]="sortableColumns"
 
 ></table-component>`,
@@ -70,7 +70,6 @@ export class AppComponent {
     },
     {"NAME": "Carissa Kunze", "EMAIL": "Merl_Frami@yahoo.com", "JOB TITLE": "Regional Division Technician", "ACTIVE": true, "PHONE NUMBER": "949-983-0342", "DATE": "2015-11-05T08:09:09.463Z"}
   ]
-  columns: Column[];
   activableColumns: string[] = ['name'];
   sortableColumns: string[] = ['name', 'job title', "ACTIVE", "DATE"];
   itemCount = 0;
@@ -80,34 +79,14 @@ export class AppComponent {
 
   constructor() {
     this.itemResource.count().then(count => this.itemCount = count);
-    this.columns = this.extractColumns();
-    this.prepareProprty();
   }
 
-  prepareProprty() {
-    for (let col of this.columns) {
-      col.property = col.name.replace(" ", "")
-    }
-  }
+
 
   reloadItems(params: DataTableParams) {
     this.itemResource.query(params).then(items => this.rows = items);
   }
 
-  extractColumns(): Column[] {
-    let columnsKeys = Object.keys(this.rows[0]);
-    let columns: Column[] = [];
-    for (let col of columnsKeys) {
-      let activable = true;
-      for (let activableColumns of this.activableColumns) {
-        if (activableColumns.toUpperCase() === col.toUpperCase()) {
-          activable = false;
-        }
-        columns.push({name: col, active: true, activable: activable, sortable: undefined, property: undefined});
-      }
-    }
-    console.log(columns);
-    return columns;
-  }
+
 
 }
