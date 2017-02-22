@@ -1,61 +1,20 @@
-import {Component, Pipe, PipeTransform, animate, transition, style, state, trigger, ElementRef, ChangeDetectorRef, Renderer, Input, EventEmitter, Output, OnInit} from '@angular/core';
+import {Component, Input, EventEmitter, Output, OnInit} from "@angular/core";
 import {Column} from "./Column";
-import {PopoverModule, PopoverContent} from "ngx-popover";
 import {DataTableParams} from "./types";
-import {DataTableResource} from "./data-table-resource";
 
 @Component({
   moduleId: module.id,
   selector: 'table-component',
   templateUrl: 'table.component.html',
-  styles: [`
-
-.column-btn{margin-left:100px;}
-
-.highlight{background-color: #dedede;}
-
-.table-panel{
-margin: 20px 20px;
-width:80%;
-}
-
-
-
-.nopadding {
-   padding: 0 !important;
-   margin: 0;
-}
-.column-list{list-style-type: none;     padding: 0px 0px;}
-.column-item{cursor:move; padding: 8px 20px;}
-.column-item:hover{background-color: #eee;}
-.glyphicon-menu-hamburger{opacity: 0; color:#8e8e8e;}
-.column-item:hover .glyphicon-menu-hamburger{opacity: 1;}
-.column-name{margin-left:0;}
-.inactivable{color:red; }
-
-input[type=checkbox] {display:none; }
- 
-input[type=checkbox] + label{
-height: 16px;
-width: 16px;
-display:inline-block;
-padding: 0 0 0 0px;
-margin-bottom: 0px;
-background: url(svgicons.svg) no-repeat -79px -474px;
-}
-input[type=checkbox]:checked + label{
-background: url(svgicons.svg) no-repeat -102px -474px;
-}
-
-
-`]
+  styleUrls: ['table.component.css']
 })
-export class TableComponent implements OnInit{
+export class TableComponent implements OnInit {
   private _items: any[] = [];
 
   private _columns: Column[] = [];
   private _activableColumns: string[] = [];
   private _sortableColumns: string[] = [];
+
   @Input() get items() {
     return this._items;
   }
@@ -90,8 +49,6 @@ export class TableComponent implements OnInit{
     this._sortableColumns = value;
   }
 
-  private _offset = 0;
-  private _limit = 10;
   private _sortBy: string;
   private _sortAsc = true;
 
@@ -100,34 +57,12 @@ export class TableComponent implements OnInit{
 
 
   _reloading = false;
-  _scheduledReload:number = null;
+  _scheduledReload: number = null;
   @Output() reload = new EventEmitter();
   @Output() headerClick = new EventEmitter();
 
   _displayParams = <DataTableParams>{}; // params of the last finished reload
   @Input() autoReload = true;
-
-
-
-  @Input()
-  get offset() {
-    return this._offset;
-  }
-
-  set offset(value) {
-    this._offset = value;
-    this._triggerReload();
-  }
-
-  @Input()
-  get limit() {
-    return this._limit;
-  }
-
-  set limit(value) {
-    this._limit = value;
-    this._triggerReload();
-  }
 
   @Input()
   get sortBy() {
@@ -149,22 +84,11 @@ export class TableComponent implements OnInit{
     this._triggerReload();
   }
 
-  @Input()
-  get page() {
-    return Math.floor(this.offset / this.limit) + 1;
-  }
-
-  set page(value) {
-    this.offset = (value - 1) * this.limit;
-  }
-
   ngOnInit() {
     this._initDefaultClickEvents();
     this._displayParams = {
       sortBy: this.sortBy,
       sortAsc: this.sortAsc,
-      offset: this.offset,
-      limit: this.limit
     };
 
     if (this.autoReload && this._scheduledReload == null) {
@@ -173,7 +97,7 @@ export class TableComponent implements OnInit{
 
     for (let sortCol of this.sortableColumns) {
       for (let col of this.columns) {
-        if (col.name === sortCol){
+        if (col.name.toUpperCase() === sortCol.toUpperCase()) {
           col.sortable = true;
         }
       }
@@ -195,7 +119,6 @@ export class TableComponent implements OnInit{
   }
 
 
-
   private _getRemoteParameters(): DataTableParams {
     let params = <DataTableParams>{};
 
@@ -203,31 +126,23 @@ export class TableComponent implements OnInit{
       params.sortBy = this.sortBy;
       params.sortAsc = this.sortAsc;
     }
-    if (this.pagination) {
-      params.offset = this.offset;
-      params.limit = this.limit;
-    }
     return params;
   }
 
-  toggleHighlightCol(i:number, hightlight:boolean):void{
-    // console.log("toggleHighlightCol")
-    if(this.columns[i])
-      this.columns[i]['hightlight']=hightlight;
+  toggleHighlightCol(i: number, hightlight: boolean): void {
+    if (this.columns[i])
+      this.columns[i]['hightlight'] = hightlight;
   }
 
   private _initDefaultClickEvents() {
-    this.headerClick.subscribe((tableEvent:any) => this.sortColumn(tableEvent.column));
-    // if (this.selectOnRowClick) {
-    //   this.rowClick.subscribe(tableEvent => tableEvent.row.selected = !tableEvent.row.selected);
-    // }
+    this.headerClick.subscribe((tableEvent: any) => this.sortColumn(tableEvent.column));
   }
 
   private sortColumn(column: Column) {
-    //if (column.sortable) {
-      let ascending = this.sortBy === column.property ? !this.sortAsc : true;
+    if (column.sortable) {
+      let ascending = (this.sortBy ? this.sortBy.toUpperCase() : "") === (column.property ? column.property.toUpperCase() : "") ? !this.sortAsc : true;
       this.sort(column.property, ascending);
-    //}
+    }
   }
 
   sort(sortBy: string, asc: boolean) {
@@ -236,27 +151,18 @@ export class TableComponent implements OnInit{
   }
 
   private headerClicked(column: Column, event: MouseEvent) {
-      this.headerClick.emit({ column, event });
+    this.headerClick.emit({column, event});
   }
 
-  // cleanHighlightCol(i:number):void{
-  //   console.log("cleanHighlightCol")
-  //   if(this.columns[i])
-  //     this.columns[i]['hightlight']=false;
-  // }
-
-  // toggleColumn(): void {
-  //
-  //   let tempCol:Column[] = [];
-  //   for (let col of this.columns) {
-  //     tempCol.push(col);
-  //   }
-  //   this.columns = tempCol;
-  //   console.log("toggleColumn")
-  //
-  // }
-
-
+  checkIfDate(value: any): boolean {
+    if (value == true || value == false) return false;
+    let date = Date.parse(value);
+    if (date) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 

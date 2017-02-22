@@ -7,3 +7,12 @@ h1 {
 .popover-content {
   padding: 0px 0px !important;
 }
+
+ul.ng2-pagination {
+  max-width:30%;
+  margin: 0 auto;
+}
+
+ul li a{
+  cursor:pointer;
+}
