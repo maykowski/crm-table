@@ -61,6 +61,9 @@ export class TableComponent implements OnInit {
   _scheduledReload: number = null;
   @Output() reload = new EventEmitter();
   @Output() headerClick = new EventEmitter();
+  @Output() multiSelect = new EventEmitter();
+
+  selectedItems: any[] = [];
 
   _displayParams = <DataTableParams>{}; // params of the last finished reload
   @Input() autoReload = true;
@@ -169,7 +172,7 @@ export class TableComponent implements OnInit {
   }
 
   // extracting columns from array and mark activable columns
-  extractColumns(items:any[], activableColumns:string[]): Column[] {
+  extractColumns(items: any[], activableColumns: string[]): Column[] {
     let columnsKeys = Object.keys(items[0]);
     let columns: Column[] = [];
     for (let col of columnsKeys) {
@@ -190,6 +193,15 @@ export class TableComponent implements OnInit {
     }
   }
 
+  manageSelection(item: any) {
+    if (item.selected) {
+      this.selectedItems.push(item);
+    } else {
+      this.selectedItems.splice(this.selectedItems.indexOf(item), 1)
+    }
+    this.multiSelect.emit(this.selectedItems);
+
+  }
 }
 
 

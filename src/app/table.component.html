@@ -5,32 +5,30 @@
     <div class="panel-heading">
       Columns
     </div>
-
     <ul dnd-sortable-container [sortableData]="columns" class="column-list">
       <li *ngFor="let item of columns; let i = index" class="column-item" dnd-sortable [sortableIndex]="i" (dragstart)="toggleHighlightCol(i, true)" (dragend)="toggleHighlightCol(i, false)">
         <div class="row">
-          <div class="col-sm-3">
+          <div class="col-sm-2 nopadding">
             <input type='checkbox' id="id_{{item.name}}" [(ngModel)]="item.active" [disabled]="!item.activable" class="column-checkbox"/>
             <label for="id_{{item.name}}"></label>
           </div>
-
-          <div class="col-sm-7 column-name"><span>{{item.name}}</span><span class="inactivable" *ngIf="!item.activable">*</span></div>
-
-          <div class="col-sm-2">
+          <div class="col-sm-9 column-name nopadding"><span>{{item.name}}</span><span class="inactivable" *ngIf="!item.activable">*</span></div>
+          <div class="col-sm-1 nopadding">
             <div class="glyphicon glyphicon-menu-hamburger"></div>
           </div>
-
         </div>
-
       </li>
     </ul>
   </popover-content>
 
-  <input type="button" [popover]="myPopover" class="column-btn">
 </div>
 
 
 <table class="table table-striped">
+  <th class="select-column">
+    <input type="button" [popover]="myPopover" class="column-btn">
+  </th>
+  <th class="select-column"></th>
   <th *ngFor="let column of columns" [class.sortable]="column.sortable" (click)="headerClicked(column, $event)" [hide]="!column.active" class="column">
     <div *ngIf="column.active">
       {{column.name}}
@@ -43,16 +41,21 @@
                         </span>
     </div>
   </th>
-  <tr *ngFor="let row of items | paginate: { itemsPerPage: 10, currentPage: p }">
+  <tr *ngFor="let row of items | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
+    <td class="select-column"></td>
+    <td class="select-column">
+      <input type="checkbox" [(ngModel)]="row.selected" id="selected_{{i}}" class="column-checkbox" (change)="manageSelection(row)">
+      <label for="selected_{{i}}"></label>
+    </td>
     <td *ngFor="let col of columns" [class.highlight]="col.hightlight" [hide]="!col.active" class="table-cell">
       <div *ngIf="col.active">
         <div *ngIf="row[col.name]!=true &&  row[col.name] !=false && !checkIfDate(row[col.name])">{{row[col.name]}}</div>
         <div *ngIf="checkIfDate(row[col.name])">{{row[col.name] | date:"dd-MM-yyyy"}}</div>
-        <div *ngIf="row[col.name]==true" class="checkbox-row">
+        <div *ngIf="row[col.name]==true" class="row-checkbox">
           <input type="checkbox" [(ngModel)]="row[col.name]">
           <label class="row-checkbox-checked"></label>
         </div>
-        <div *ngIf="row[col.name]==false" class="checkbox-row">
+        <div *ngIf="row[col.name]==false" class="row-checkbox">
           <input type="checkbox" [(ngModel)]="row[col.name]">
           <label class="row-checkbox-unchecked"></label>
         </div>

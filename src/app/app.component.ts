@@ -6,7 +6,7 @@ import {Column} from "./Column";
 @Component({
   moduleId: module.id,
   selector: 'my-app',
-  template: `<table-component (reload)="reloadItems($event)"         [items]="rows"
+  template: `<table-component (reload)="reloadItems($event)"         [items]="rows" (multiSelect)="getSelected($event)"
 [activableColumns]="activableColumns"         [itemCount]="itemCount" [sortableColumns]="sortableColumns"
 
 ></table-component>`,
@@ -75,6 +75,7 @@ export class AppComponent {
   itemCount = 0;
 
 
+
   itemResource = new DataTableResource(this.rows);
 
   constructor() {
@@ -85,6 +86,10 @@ export class AppComponent {
 
   reloadItems(params: DataTableParams) {
     this.itemResource.query(params).then(items => this.rows = items);
+  }
+
+  getSelected(items:any[]){
+    console.log("gs",items);
   }
 
 

@@ -8,24 +8,13 @@
   font-style: normal;
 }
 
+input[type=checkbox] {display:none; } /*all checkboxes are hidden as replaced by sprites icons*/
 
-.column-btn{
-  margin-left:20%;
-  background: url(svgicons.svg) no-repeat -166px -139px;
 
-  width: 21px;
-  height: 17px;
-  border: 0;
-  margin-top: 1px;
-  display: block;
-  cursor: pointer;
-}
 
-.column-btn:focus{
-  outline:0;
-}
+/*table*/
 
-.highlight{background-color: #2199e8;color:#fff;}
+.highlight{background-color: #2199e8;color:#fff!important;}
 
 .table-panel{
   margin: 20px 20px;
@@ -40,8 +29,13 @@
 .column{
   font-family:ProximaNovaRegular;
   font-weight: normal;
-  text-align:center;
+  text-align:left;
   color:#4d4d4d;
+  padding-left: 8px;
+}
+
+.select-column{
+  width:5%;
 }
 
 th.sortable{
@@ -65,6 +59,7 @@ th.sortable{
   font-family:ProximaNovaRegular;
   font-weight: normal;
   color:#000;
+  text-align: left;
 }
 
 .row-checkbox-checked{
@@ -79,24 +74,36 @@ th.sortable{
   height: 19px;
 }
 
-.checkbox-row{
-  text-align: center;
-}
+/*select column popover */
 
 
-.nopadding {
-  padding: 0 !important;
-  margin: 0;
+.column-btn{
+  margin-left:20%;
+  background: url(svgicons.svg) no-repeat -166px -139px;
+  width: 21px;
+  height: 17px;
+  border: 0;
+  margin-top: 1px;
+  display: block;
+  cursor: pointer;
 }
+
+.column-btn:focus{
+  outline:0;
+}
+
 .column-list{list-style-type: none;     padding: 0px 0px;}
-.column-item{cursor:move; padding: 8px 20px;}
+.column-item{cursor:move; padding: 8px 20px;     font-size: 12px; width: 190px;}
 .column-item:hover{background-color: #eee;}
 .glyphicon-menu-hamburger{opacity: 0; color:#8e8e8e;}
 .column-item:hover .glyphicon-menu-hamburger{opacity: 1;}
 .column-name{margin-left:0;}
 .inactivable{color:red; }
 
-input[type=checkbox] {display:none; }
+.nopadding {
+  padding: 0 !important;
+  margin: 0;
+}
 
 input[type=checkbox].column-checkbox + label{
   height: 16px;
@@ -105,7 +112,10 @@ input[type=checkbox].column-checkbox + label{
   padding: 0 0 0 0px;
   margin-bottom: 0px;
   background: url(svgicons.svg) no-repeat -79px -474px;
+  cursor:pointer;
+
 }
 input[type=checkbox].column-checkbox:checked + label{
   background: url(svgicons.svg) no-repeat -102px -474px;
+  cursor:pointer;
 }

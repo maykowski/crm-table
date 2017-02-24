@@ -7,6 +7,8 @@ h1 {
 .popover-content {
   padding: 0px 0px !important;
 }
+.popover.bottom{    margin-top: 5px!important;  margin-left: 87px!important;}
+.popover.bottom>.arrow{display: none;}
 
 ul.ng2-pagination {
   max-width:30%;
