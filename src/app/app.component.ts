@@ -69,7 +69,7 @@ export class AppComponent {
       "DATE": "2015-08-09T07:38:06.588Z"
     },
     {"NAME": "Carissa Kunze", "EMAIL": "Merl_Frami@yahoo.com", "JOB TITLE": "Regional Division Technician", "ACTIVE": true, "PHONE NUMBER": "949-983-0342", "DATE": "2015-11-05T08:09:09.463Z"}
-  ]
+  ];
   activableColumns: string[] = ['name'];
   sortableColumns: string[] = ['name', 'job title', "ACTIVE", "DATE"];
   itemCount = 0;
@@ -85,7 +85,9 @@ export class AppComponent {
 
 
   reloadItems(params: DataTableParams) {
-    this.itemResource.query(params).then(items => this.rows = items);
+    //enable when real pagination
+    // this.itemResource.query(params).then(items => this.rows = items);
+
   }
 
   getSelected(items:any[]){

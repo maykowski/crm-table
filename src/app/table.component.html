@@ -28,7 +28,10 @@
   <th class="select-column">
     <input type="button" [popover]="myPopover" class="column-btn">
   </th>
-  <th class="select-column"></th>
+  <th class="select-column column">
+    <input type="checkbox" id="selectAll" class="column-checkbox" [(ngModel)]="selectAll" (change)="toggleAll()">
+    <label for="selectAll"></label>
+  </th>
   <th *ngFor="let column of columns" [class.sortable]="column.sortable" (click)="headerClicked(column, $event)" [hide]="!column.active" class="column">
     <div *ngIf="column.active">
       {{column.name}}

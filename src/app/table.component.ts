@@ -133,6 +133,10 @@ export class TableComponent implements OnInit {
       params.sortBy = this.sortBy;
       params.sortAsc = this.sortAsc;
     }
+
+
+    // params.limit = 10;
+    // params.offset = 0;
     return params;
   }
 
@@ -200,6 +204,23 @@ export class TableComponent implements OnInit {
       this.selectedItems.splice(this.selectedItems.indexOf(item), 1)
     }
     this.multiSelect.emit(this.selectedItems);
+
+  }
+
+  selectAll: boolean;
+
+  toggleAll() {
+    if (this.selectAll) {
+      for (let item of this.items)
+        item.selected = true;
+      this.selectedItems = this.items.slice(0)
+    } else {
+      for (let item of this.items)
+        item.selected = false;
+      this.selectedItems = []
+    }
+    this.multiSelect.emit(this.selectedItems);
+
 
   }
 }

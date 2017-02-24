@@ -14,7 +14,7 @@ export class DataTableResource<T> {
             result = this.items.slice(); // shallow copy to use for sorting instead of changing the original
         }
 
-        if (params.sortBy) {
+      if (params.sortBy) {
             result.sort((a:any, b:any) => {
                 if (typeof a[params.sortBy] === 'string') {
                     return a[params.sortBy].localeCompare(b[params.sortBy]);
@@ -34,7 +34,7 @@ export class DataTableResource<T> {
             }
         }
 
-        return new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
             setTimeout(() => resolve(result));
         });
     }
