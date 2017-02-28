@@ -1,6 +1,7 @@
 import {Component, Input, EventEmitter, Output, OnInit} from "@angular/core";
 import {Column} from "./Column";
 import {DataTableParams} from "./types";
+import {DataTableResource} from "./data-table-resource";
 
 @Component({
   moduleId: module.id,
@@ -10,18 +11,19 @@ import {DataTableParams} from "./types";
 })
 export class TableComponent implements OnInit {
 
-  private _items: any[] = [];
+  private items: any[];
+  private _itemsPromise: Promise<any[]>;
 
   private _columns: Column[] = [];
   private _activableColumns: string[] = [];
   private _sortableColumns: string[] = [];
 
-  @Input() get items() {
-    return this._items;
+  @Input() get itemsPromise() {
+    return this._itemsPromise;
   }
 
-  set items(items: any[]) {
-    this._items = items;
+  set itemsPromise(itemsPromise: Promise<any[]>) {
+    this._itemsPromise = itemsPromise;
     //this._onReloadFinished();
   }
 
@@ -59,7 +61,7 @@ export class TableComponent implements OnInit {
 
   _reloading = false;
   _scheduledReload: number = null;
-  @Output() reload = new EventEmitter();
+  // @Output() reload = new EventEmitter();
   @Output() headerClick = new EventEmitter();
   @Output() multiSelect = new EventEmitter();
 
@@ -88,27 +90,37 @@ export class TableComponent implements OnInit {
     this._triggerReload();
   }
 
-  ngOnInit() {
-    this._columns = this.extractColumns(this.items, this.activableColumns);
-    this.prepareProperty();
+  dataTableResouce: DataTableResource<any>;
 
-    this._initDefaultClickEvents();
+  ngOnInit() {
+    this.itemsPromise.then(items => {
+      this.columns = this.extractColumns(items, this.activableColumns);
+      this.items = items;
+
+      for (let col of this.columns) {
+        col.property = col.name;//.replace(" ", "")
+      }
+      this._initDefaultClickEvents();
+
+      for (let sortCol of this.sortableColumns) {
+        for (let col of this.columns) {
+          if (col.name.toUpperCase() === sortCol.toUpperCase()) {
+            col.sortable = true;
+          }
+        }
+      }
+
+      this.dataTableResouce = new DataTableResource(this.items);
+      return this.dataTableResouce.query(this._getRemoteParameters())
+
+    }).then(queryItems => {
+      this.items = queryItems;
+    });
+
     this._displayParams = {
       sortBy: this.sortBy,
       sortAsc: this.sortAsc,
     };
-
-    if (this.autoReload && this._scheduledReload == null) {
-      this.reloadItems();
-    }
-
-    for (let sortCol of this.sortableColumns) {
-      for (let col of this.columns) {
-        if (col.name.toUpperCase() === sortCol.toUpperCase()) {
-          col.sortable = true;
-        }
-      }
-    }
   }
 
   _triggerReload() {
@@ -122,7 +134,9 @@ export class TableComponent implements OnInit {
 
   reloadItems() {
     this._reloading = true;
-    this.reload.emit(this._getRemoteParameters());
+    new DataTableResource(this.items).query(this._getRemoteParameters()).then(items => {
+      this.items = items;
+    });
   }
 
 
@@ -168,11 +182,16 @@ export class TableComponent implements OnInit {
   checkIfDate(value: any): boolean {
     if (value == true || value == false) return false;
     let date = Date.parse(value);
-    if (date) {
+    if (!isNaN(date) && isNaN(value)) {
       return true;
     } else {
       return false;
     }
+  }
+
+  checkIfBoolean(value: any) {
+    return typeof(value) === "boolean"
+
   }
 
   // extracting columns from array and mark activable columns
@@ -189,12 +208,6 @@ export class TableComponent implements OnInit {
       }
     }
     return columns;
-  }
-
-  prepareProperty() {
-    for (let col of this.columns) {
-      col.property = col.name.replace(" ", "")
-    }
   }
 
   manageSelection(item: any) {

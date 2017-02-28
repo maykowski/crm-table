@@ -36,25 +36,27 @@
     <div *ngIf="column.active">
       {{column.name}}
       <span class="column-sort-icon" *ngIf="column.sortable">
-                            <span class="glyphicon glyphicon-sort column-sortable-icon" [class.column-sortable]="column.sortable" [hide]="column.property === sortBy"></span>
-                            <span [hide]="column.property !== sortBy">
-                                <span class="glyphicon glyphicon-triangle-top sort-arrow" [hide]="sortAsc"></span>
-                                <span class="glyphicon glyphicon-triangle-bottom sort-arrow" [hide]="!sortAsc"></span>
-                            </span>
-                        </span>
+        <span class="glyphicon glyphicon-sort column-sortable-icon" [class.column-sortable]="column.sortable" [hide]="column.property === sortBy"></span>
+        <span [hide]="column.property !== sortBy">
+          <span class="glyphicon glyphicon-triangle-top sort-arrow" [hide]="sortAsc"></span>
+          <span class="glyphicon glyphicon-triangle-bottom sort-arrow" [hide]="!sortAsc"></span>
+        </span>
+      </span>
     </div>
   </th>
-  <tr *ngFor="let row of items | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;">
-    <td class="select-column"></td>
+  <tr *ngFor="let row of items | paginate: { itemsPerPage: 10, currentPage: p }; let i = index;" class="table-row">
+    <td class="select-column">
+      <span class="edit-row"   [routerLink]="['/detail', row.id]"></span>
+    </td>
     <td class="select-column">
       <input type="checkbox" [(ngModel)]="row.selected" id="selected_{{i}}" class="column-checkbox" (change)="manageSelection(row)">
       <label for="selected_{{i}}"></label>
     </td>
     <td *ngFor="let col of columns" [class.highlight]="col.hightlight" [hide]="!col.active" class="table-cell">
       <div *ngIf="col.active">
-        <div *ngIf="row[col.name]!=true &&  row[col.name] !=false && !checkIfDate(row[col.name])">{{row[col.name]}}</div>
+        <div *ngIf="!checkIfDate(row[col.name]) && !checkIfBoolean(row[col.name])">{{row[col.name]}}</div>
         <div *ngIf="checkIfDate(row[col.name])">{{row[col.name] | date:"dd-MM-yyyy"}}</div>
-        <div *ngIf="row[col.name]==true" class="row-checkbox">
+        <div *ngIf="checkIfBoolean(row[col.name]) && row[col.name]==true" class="row-checkbox">
           <input type="checkbox" [(ngModel)]="row[col.name]">
           <label class="row-checkbox-checked"></label>
         </div>

@@ -9,10 +9,19 @@ import {DndModule} from "ng2-dnd";
 import {MinPipe} from "./utils/min";
 import {Hide} from "./utils/hide";
 import {Ng2PaginationModule} from "ng2-pagination";
+import {InMemoryDataService} from "./in-memory-data.service";
+import {TableService} from "./table.service";
+import {AppRoutingModule} from "./app-routing.module";
+import {TableDetailComponent} from "./table-detail.component";
+import {HttpModule} from "@angular/http";
+import {InMemoryWebApiModule} from "angular-in-memory-web-api";
 
 @NgModule({
-  imports:      [ BrowserModule, FormsModule, PopoverModule, DndModule.forRoot(), Ng2PaginationModule],
-  declarations: [ AppComponent, TableComponent, MinPipe, Hide],
-  bootstrap:    [ AppComponent ]
+  imports:      [ BrowserModule, FormsModule, PopoverModule, DndModule.forRoot(), Ng2PaginationModule, HttpModule,
+    InMemoryWebApiModule.forRoot(InMemoryDataService), AppRoutingModule
+  ],
+  declarations: [ AppComponent, TableComponent, TableDetailComponent, MinPipe, Hide],
+  bootstrap:    [ AppComponent ],
+  providers: [TableService]
 })
 export class AppModule { }
