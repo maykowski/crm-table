@@ -13,7 +13,6 @@ input[type=checkbox] {
   display: none;
 }
 
-
 /*table*/
 
 .highlight {
@@ -76,7 +75,11 @@ th.sortable {
   width: 14px;
   height: 16px;
   display: block;
-  }
+}
+
+.edit-row:hover{
+  cursor:pointer;
+}
 
 .row-checkbox-checked {
   background: url(svgicons.svg) no-repeat -132px -363px;

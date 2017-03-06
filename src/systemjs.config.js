@@ -28,7 +28,8 @@
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
       "ngx-popover": "node_modules/ngx-popover",
       'ng2-dnd': 'node_modules/ng2-dnd/bundles/index.umd.js',
-      'ng2-pagination': 'node_modules/ng2-pagination/dist'
+      'ng2-pagination': 'node_modules/ng2-pagination/dist',
+      'mydatepicker': 'npm:mydatepicker/bundles/mydatepicker.umd.js'
       // 'ng2-pagination':             'https://rawgit.com/michaelbromley/ng2-pagination/master/dist'
 
     },

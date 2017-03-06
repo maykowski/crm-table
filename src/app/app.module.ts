@@ -15,12 +15,14 @@ import {AppRoutingModule} from "./app-routing.module";
 import {TableDetailComponent} from "./table-detail.component";
 import {HttpModule} from "@angular/http";
 import {InMemoryWebApiModule} from "angular-in-memory-web-api";
+import {DemoComponent} from "./demo.component";
+import {MyDatePickerModule} from "mydatepicker";
 
 @NgModule({
   imports:      [ BrowserModule, FormsModule, PopoverModule, DndModule.forRoot(), Ng2PaginationModule, HttpModule,
-    InMemoryWebApiModule.forRoot(InMemoryDataService), AppRoutingModule
+    InMemoryWebApiModule.forRoot(InMemoryDataService), AppRoutingModule, MyDatePickerModule
   ],
-  declarations: [ AppComponent, TableComponent, TableDetailComponent, MinPipe, Hide],
+  declarations: [ AppComponent, DemoComponent, TableComponent, TableDetailComponent, MinPipe, Hide],
   bootstrap:    [ AppComponent ],
   providers: [TableService]
 })

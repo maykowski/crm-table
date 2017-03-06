@@ -191,7 +191,6 @@ export class TableComponent implements OnInit {
 
   checkIfBoolean(value: any) {
     return typeof(value) === "boolean"
-
   }
 
   // extracting columns from array and mark activable columns
